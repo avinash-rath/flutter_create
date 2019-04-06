@@ -1,0 +1,237 @@
+import 'dart:math'; // Used for the max() function.
+import 'package:flare_flutter/flare_actor.dart';  // To use the Custom Made Flare Animations 
+import 'package:flutter/material.dart';  
+
+void main() => runApp(Home());
+
+class Home extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: CreateOne(),
+    );
+  }
+}
+/*
+    The list of Animation Files built using Flare (by 2Dimensions)
+*/
+List<String> animations = [
+  'assets/1.flr',
+  'assets/1.flr',
+  'assets/2.flr',
+];
+/*
+    Animations used in Each File.
+    Roundel - 1 and Roundel - 2 are in 1.flr whereas, star_roundel animation is in 2.flr file.
+*/
+List<String> animationNames = ['Roundel - 1', 'Roundel - 2', 'star_roundel']; 
+
+
+ //Can't display the file name as the Animation Name to the User
+List<String> names = ['Roundel - 1', 'Roundel - 2', 'Star Roundel'];
+
+// Aspect Ratios declared for the Cards in the Carousel Effect Created by the CardScrollWidget class.
+var cardAspectRatio = 12.0 / 16.0;  
+var widgetAspectRatio = cardAspectRatio * 1.2;
+
+class CreateOne extends StatefulWidget {
+  @override
+  _CreateOneState createState() => _CreateOneState();
+}
+
+class _CreateOneState extends State<CreateOne> {
+
+  // Shows the cursor to the current page in the carousel view
+  var currentPage = animations.length - 1.0;
+  @override
+  Widget build(BuildContext context) {
+
+      // Add a PageController
+    PageController controller =
+        PageController(initialPage: animations.length - 1);
+    controller.addListener(() {
+      setState(() {
+        currentPage = controller.page;
+      });
+    });
+    return Scaffold(
+        backgroundColor: Color(0xFF2d3447),
+        body: SingleChildScrollView(
+            child: Column(children: <Widget>[
+          Padding(
+              padding: EdgeInsets.symmetric(vertical: 50.0, horizontal: 25.0),
+              child: Text('Choose Your ProgressIndicator',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.white,
+                  ))),
+          Stack(children: <Widget>[
+              /*
+                CardScrollWidget's constructor takes the currentPage pointer to build the pages to be presented 
+                in the PageView builder.
+              */
+            CardScrollWidget(currentPage),
+            Positioned.fill(
+                // PageView Builder for the carousel effect.
+                child: PageView.builder(
+                    itemCount: animations.length,
+                    controller: controller,
+                    reverse: true,
+                    itemBuilder: (context, index) {
+                      return Container();
+                    }))
+          ])
+        ])));
+  }
+}
+
+class CardScrollWidget extends StatelessWidget {
+  // saving the state of the currentPage taken as a paramater for the constructor.
+  var currentPage;
+  // padding variable to add to spacing in the card that wil be built.
+  var padding = 20.0;
+  // A vertical inset for the pages further visible in the carousel.
+  var verticalInset = 20.0;
+  CardScrollWidget(this.currentPage);
+  @override
+  Widget build(BuildContext context) {
+    return new AspectRatio(
+        // using the aspect ratio from Globally declared varible for the widget(Here, the widget is the card).
+      aspectRatio: widgetAspectRatio,
+      child: LayoutBuilder(builder: (context, contraints) {
+
+
+          // reference height and width of the card for calculating safeHeight and safeWidth
+        var width = contraints.maxWidth;
+        var height = contraints.maxHeight;
+
+
+        // safeHeight and safeWidth for the diplay area of each card.
+        var safeWidth = width - 2 * padding;
+        var safeHeight = height - 2 * padding;
+
+        // heightOfPrimaryCard is the same as safeHeight as that is the visible paramater of the card.
+        var heightOfPrimaryCard = safeHeight;
+
+        /*
+            width of the primary card is determined by the heightOfPrimaryCard 
+            and cardAspectRatio determined by the global variable
+        */
+        var widthOfPrimaryCard = heightOfPrimaryCard * cardAspectRatio;
+
+        /*
+           Now, out of the safe width of the primary card, after removing the visible width of the primary
+           card, the rest of the space will be available for underlying cards in the carousel.
+        */
+        var primaryCardLeft = safeWidth - widthOfPrimaryCard;
+        /*
+            To show more than one underlying cards beneath the primary cards we divide the
+            horizontalInset by 2 so that atleast 2 cards with equal spacing underneath can be shown
+            in the carousel.
+        */
+        var horizontalInset = primaryCardLeft / 2;
+
+        /*
+            Since we are trying to return a many cards like such,
+            all the created cards will be added to a list named cardList
+        */
+        List<Widget> cardList = new List();
+
+        /*Creating all of the cards/pages gor the PageView builder*/
+        for (var i = 0; i < animations.length; i++) {
+
+          var delta = i - currentPage;
+
+          /*
+            if the the card is the primary card, Then it should start with giving 
+            some padding and additional spacing to accomodate some part of other 
+            cards/pages, thus it is used in the start property in the Positioned.directional
+            widget.
+
+          */
+          bool isOnRight = delta > 0;
+
+          /*
+             start variable for spacing in Positioned.directional widget
+            since the textDirection used in the Positioned.directional
+            widget is going to be from right to left, the card should start
+            building after a certain padding and then some additional space 
+            to accomodate underlying cards.
+          */
+          var start = padding +
+              max(
+                  primaryCardLeft -
+                      horizontalInset * -delta * (isOnRight ? 15 : 1),
+                  0.0);
+
+          /* Creating Each card according the current positin of 
+          the scrollview using the PageController
+          */
+          var cardItem = Positioned.directional(
+            top: padding + verticalInset * max(-delta, 0.0),
+            bottom: padding + verticalInset * max(-delta, 0.0),
+            start: start,
+
+            /*
+                textDirection is from right to left in order to place
+                the cards in a carousel that goes from right to left on 
+                complimentary swipes from left to right anf from right to left.
+            */
+            textDirection: TextDirection.rtl,
+            child: AspectRatio(
+                aspectRatio: cardAspectRatio,
+                child: Container(
+                    /* Some box decoration for fancy looking cards*/
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(12.0)
+                    ),
+                    child: Stack(children: <Widget>[
+                      FlareActor(
+                          /* 
+                            Makes use of FlareActor Widget from the 
+                            flutter_flare library to build each card respectively
+                            for each list item present in the animations list variable.
+                            The list contains the asset .flr files
+                          */
+                        animations[i],
+                        
+                        fit: BoxFit.contain,
+
+                        /*
+                            Different animations can be used within the same .flr file
+                        */
+                        animation: animationNames[i],
+                      ),
+                      Align(
+                          alignment: Alignment.bottomLeft,
+                          child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 10.0, bottom: 10.0),
+                                    child: Text(names[i],
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 25.0,
+                                        )))
+                              ]))
+                    ]))),
+          );
+
+          /*
+            after building the card, add it to the cardList
+          */
+          cardList.add(cardItem);
+        }
+
+        /*Return a stack widget to the Stack for PageView.builder*/
+        return Stack(
+          children: cardList,
+        );
+      }),
+    );
+  }
+}
