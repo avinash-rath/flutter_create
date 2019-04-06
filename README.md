@@ -17,4 +17,4 @@ code documentation is done in the mainDocumented.txt file.
 
 ## Demo display of the submission.
 
-![video](ScreenRecorder.mp4)
+!(DemoView)[demoview.gif]
