@@ -1,16 +1,20 @@
 # flutter_create
 
-A new Flutter application.
+Submission to the flutter_create contest by Avinash Rath.
 
-## Getting Started
+## Introduction
 
-This project is a starting point for a Flutter application.
+The main idea behind this submission is to give the user of the app
+the choice for their own Progress Indicator while they are waiting for
+their app to load the data. The user can choose from an array of custom
+made Animations to apply it to their app, and the same animation will
+be used for the displaying the progress indicator throughout the app.
 
-A few resources to get you started if this is your first Flutter project:
+## Something unusual
 
-- [Lab: Write your first Flutter app](https://flutter.io/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.io/docs/cookbook)
+Since there is limit to the .dart file size in this contest, all of the 
+code documentation is done in the mainDocumented.txt file.
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+## Demo display of the submission.
+
+![video](ScreenRecorder.mp4)
