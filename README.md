@@ -17,4 +17,4 @@ code documentation is done in the mainDocumented.txt file.
 
 ## Demo display of the submission.
 
-!(DemoView)[demoview.gif]
+![DemoView](demoview.gif)
