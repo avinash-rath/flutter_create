@@ -3,7 +3,7 @@ This submission's main goal is to provide the user with the choice of having the
 a lot of custom made animations(Here, the animations are made using Flare(by 2Dimensions)).
 
 The carousel in the opening of the app gives the choice of some animations, that can be used as the default Progress Indicator,
-This can be stored in variable and then can be further used for showing preogress indicators instead of the default progress indicator
+This can be stored in variable and then can be further used for showing progress indicators instead of the default progress indicator
 that Android or iOS provides.
 
 # Something Different
